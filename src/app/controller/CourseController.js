@@ -20,7 +20,7 @@ class CourseController {
 
   // [POST] /course/store
   store(req, res, next) {
-    req.body.image = `https://i.ytimg.com/vi/${req.body.videoId}/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCIbqeKbGaQRzxC-8fhAicJNs6KPQ`;
+    req.body.image = `https://i.ytimg.com/vi/${req.body.videoId}/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCJ7GkmVcmAg6KPKaAPAX0DyTnCvw`;
     const course = new Course(req.body);
     course
       .save()
@@ -65,6 +65,20 @@ class CourseController {
     Course.restore({ _id: req.params.id })
       .then(() => res.redirect('back'))
       .catch(next);
+  }
+
+  // [POST] /courses/handle-form-actions
+  handleFormAction(req, res, next) {
+    switch (req.body.action) {
+      case 'delete':
+        Course.delete({ _id: { $in: req.body.courseIds } })
+          .then(() => res.redirect('back'))
+          .catch(next);
+        break;
+
+      default:
+        res.json({ message: 'Invalid action' });
+    }
   }
 }
 

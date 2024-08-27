@@ -1,35 +1,68 @@
-<div class='pt-4'>
-    <a href="/me/stored/courses">Back to list courses</a>
-    <h3>Trash bin</h3>
-    <table class='table'>
+<form class='pt-4 d-flex flex-column gap-3' name="container-form" method="POST" action="/me/handle-form-actions">
+    <div>
+        <h3>Trash Bin</h3>
+        <a class="btn btn-primary" href="/me/stored/courses">
+            <span class="px-1">
+                <i class="fa-solid fa-backward"></i>
+            </span> Back to list courses
+        </a>
+    </div>
+
+    <div class="d-flex gap-4 align-items-center">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="checkbox-all">
+            <label class="form-check-label" for="checkbox-all">
+                Select All
+            </label>
+        </div>
+
+        <div>
+            <select class="form-select form-select-sm form-select-option" name="action" required>
+                <option value=""> -- Action --</option>
+                <option value="restore">Restore</option>
+                <option value="force-delete">Force Delete</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary btn-sm btn-apply" disabled>Apply</button>
+    </div>
+
+    <table class='table table-dark table-striped'>
         <thead>
             <tr>
-                <th scope='col'>#</th>
+                <th scope='col' colspan="2">#</th>
                 <th scope='col'>Name</th>
                 <th scope='col'>Level</th>
-                <th scope='col'>Create At</th>
-                <th scope='col'></th>
+                <th scope='col'>Deleted At</th>
+                <th scope='col' colspan="2"></th>
             </tr>
         </thead>
 
         <tbody>
             {{#each courses}}
             <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="courseIds[]" value="{{this._id}}">
+                    </div>
+                </td>
                 <th scope='row'>{{sum @index 1}}</th>
                 <td>{{this.name}}</td>
                 <td>{{this.level}}</td>
-                <td>{{this.createdAt}}</td>
+                <td>{{this.deletedAt}}</td>
                 <td>
-                    <a href="" class='btn btn-link btn-restore' data-id={{this._id}}>Restore</a>
-                    <a href="" class="btn btn-link" data-bs-id={{this._id}} data-bs-toggle="modal"
-                        data-bs-target="#delete-course-modal">Force delete</a>
-
+                    <a href="" class='btn btn-primary text-white flex-grow-1 btn-link btn-restore'
+                        data-id={{this._id}}>Restore</a>
+                </td>
+                <td>
+                    <a href="" class="btn btn-danger text-white text-nowrap btn-link" data-bs-id={{this._id}}
+                        data-bs-toggle="modal" data-bs-target="#delete-course-modal">Force Delete</a>
                 </td>
             </tr>
 
             {{else}}
             <tr>
-                <td colspan="5" class="text-center">
+                <td colspan="6" class="text-center">
                     Empty trash bin.
                     <a href="/me/stored/courses">List courses</a>
                 </td>
@@ -37,7 +70,7 @@
             {{/each}}
         </tbody>
     </table>
-</div>
+</form>
 
 {{!-- Confirm delete --}}
 <div class="modal fade" id="delete-course-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -69,10 +102,14 @@
         var restoreForm = document.forms['restore-course-form']
         var btnDeleteCourse = document.getElementById('btn-delete-course')
         var btnRestore = $('.btn-restore')
+        var checkboxAll = $('#checkbox-all')
+        var courseItemCheckbox = $('input[name="courseIds[]"]')
+        var btnApply = $('.btn-apply')
+        var containerForm = document.forms['container-form']
 
         // When dialog confirm clicked
-        var exampleModal = document.getElementById('delete-course-modal')
-        exampleModal.addEventListener('show.bs.modal', function (event) {
+        var dialogConfirm = document.getElementById('delete-course-modal')
+        dialogConfirm.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget
             courseId = button.getAttribute('data-bs-id')
         })
@@ -91,5 +128,44 @@
             restoreForm.action = '/courses/' + courseId + '/restore?_method=PATCH'
             restoreForm.submit();
         })
+
+        // When Checkbox all clicked
+        checkboxAll.change(function () {
+            var isCheckedAll = $(this).prop('checked')
+
+            courseItemCheckbox.prop('checked', isCheckedAll)
+            renderApplyButton()
+        })
+
+        // Course item checkbox change
+        courseItemCheckbox.change(function () {
+            var allCheckbox = courseItemCheckbox.length
+            var checkedCount = courseItemCheckbox.filter(':checked').length
+
+            checkboxAll.prop('checked', checkedCount === allCheckbox)
+            renderApplyButton()
+        })
+
+        // Check all submit changes
+        btnApply.click = function (e) {
+            e.preventDefault();
+
+            var isSubmitable = !$(this).hasClass('disabled')
+
+            if (isSubmitable) {
+                containerForm.submit()
+            }
+        }
+
+        // Re-render check all submit button
+        function renderApplyButton() {
+            var checkedItemCount = $('input[name="courseIds[]"]:checked').length
+
+            if (checkedItemCount > 0) {
+                btnApply.attr('disabled', false)
+            } else {
+                btnApply.attr('disabled', true)
+            }
+        }
     })
 </script>

@@ -1,10 +1,13 @@
-<div class='pt-4'>
-  <h3>Update courses</h3>
+<div class='pt-4 d-flex flex-column gap-3'>
+  <div>
+    <h3>Update Courses</h3>
+    <a class="btn btn-primary" href="/me/stored/courses">Back to list courses</a>
+  </div>
 
-  <form class="mt-2" method='POST' action='/courses/{{course._id}}?_method=PUT'>
+  <form class="d-flex flex-column gap-2" method='POST' action='/courses/{{course._id}}?_method=PUT'>
     <div class='form-group'>
       <label for='name'>Name</label>
-      <input type='text' class='form-control' value={{course.name}} id='name' name='name' />
+      <input type='text' class='form-control' value="{{course.name}}" id='name' name='name' />
     </div>
 
     <div class='form-group'>
@@ -14,14 +17,14 @@
 
     <div class='form-group'>
       <label for='videoId'>Video ID</label>
-      <input type='text' class='form-control' value={{course.videoId}} id='videoId' name='videoId' />
+      <input type='text' class='form-control' value="{{course.videoId}}" id='videoId' name='videoId' />
     </div>
 
     <div class='form-group'>
       <label for='level'>Level</label>
-      <input type='text' class='form-control' value={{course.level}} id='level' name='level' />
+      <input type='text' class='form-control' value="{{course.level}}" id='level' name='level' />
     </div>
 
-    <button type='submit' class='btn btn-primary mt-4'>Update</button>
+    <button type='submit' class='btn btn-primary mt-2'>Update</button>
   </form>
 </div>

@@ -5,5 +5,6 @@ const meController = require('../app/controller/MeController');
 
 router.get('/stored/courses', meController.storedCourses);
 router.get('/trash/courses', meController.trashCourses);
+router.post('/handle-form-actions', meController.handleFormAction);
 
 module.exports = router;
