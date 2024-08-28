@@ -20,7 +20,8 @@ class CourseController {
 
   // [POST] /course/store
   store(req, res, next) {
-    req.body.image = `https://i.ytimg.com/vi/${req.body.videoId}/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCJ7GkmVcmAg6KPKaAPAX0DyTnCvw`;
+    req.body.image = `https://i.ytimg.com/vi/${req.body.videoId}/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCwmmtMipmt_vqWtjSUOQSUcXIpVg`;
+
     const course = new Course(req.body);
     course
       .save()

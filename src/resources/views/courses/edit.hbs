@@ -1,4 +1,4 @@
-<div class='pt-4 d-flex flex-column gap-3'>
+<div class='d-flex flex-column gap-3'>
   <div>
     <h3>Update Courses</h3>
     <a class="btn btn-primary" href="/me/stored/courses">Back to list courses</a>
@@ -13,6 +13,11 @@
     <div class='form-group'>
       <label for='description'>Description</label>
       <textarea class='form-control' id='description' name='description'>{{course.description}}</textarea>
+    </div>
+
+    <div class='form-group'>
+      <label for='image'>Image</label>
+      <input type='text' class='form-control' value="{{course.image}}" id='image' name='image' />
     </div>
 
     <div class='form-group'>
